@@ -12,14 +12,14 @@ const checkAuth = (req, res, next) => {
             next()
         } catch (error) {
             return res.json({
-                message: 'Нет доступа.',
+                message: 'Please, log in.',
             })
         }
     } else {
         return res.json({
-            message: 'Нет доступа.',
+            message: 'Please, log in.',
         })
     }
 }
 
-module.exports = checkAuth; 
+module.exports = checkAuth 

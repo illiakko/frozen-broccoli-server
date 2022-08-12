@@ -6,19 +6,18 @@ const { validationResult } = require('express-validator')
 
 // Register user
 const register = async (req, res) => {
+
     try {
         const errors = validationResult(req);
 
         if (!errors.isEmpty()) {
-            return res.status(400).json(errors.array())
+            return res.status(400).send({ message: errors.array()[0].msg })
         }
 
         const emailExist = await User.findOne({ email: req.body.email })
 
         if (emailExist) {
-            return res.status(400).send({
-                message: 'This email address is already being used.'
-            })
+            return res.status(400).send({ message: 'This email address is already being used.' })
         }
 
         const salt = await bcrypt.genSalt(10);
@@ -40,16 +39,16 @@ const register = async (req, res) => {
             { expiresIn: '30d' },
         )
 
-        res.send({
-            user: savedUser.name,
-            email: savedUser.email,
-            id: savedUser._id,
+        const { password, ...userData } = savedUser._doc
+
+        res.status(200).send({
+            user: userData,
             token,
             message: 'Your registration is successful.',
 
         })
     } catch (error) {
-        res.json({ message: 'Registration failed.' })
+        console.log(error);
     }
 }
 
@@ -57,25 +56,18 @@ const register = async (req, res) => {
 const login = async (req, res) => {
     try {
         const errors = validationResult(req);
-
         if (!errors.isEmpty()) {
-            return res.status(400).json(errors.array())
+            return res.status(400).send({ message: errors.array()[0].msg })
         }
 
         const user = await User.findOne({ email: req.body.email })
-
         if (!user) {
-            return res.status(400).send({
-                message: 'Email or password is wrong.'
-            })
+            return res.status(400).send({ message: 'Email or password is wrong.' })
         }
 
         const isPasswordCorrect = await bcrypt.compare(req.body.password, user.password)
-
         if (!isPasswordCorrect) {
-            return res.status(400).send({
-                message: 'Email or password is wrong.'
-            })
+            return res.status(400).send({ message: 'Email or password is wrong.' })
         }
 
         const token = jwt.sign(
@@ -88,14 +80,15 @@ const login = async (req, res) => {
 
         const { password, ...userData } = user._doc
 
-        res.json({
+        res.status(200).send({
+            user: userData,
             token,
-            userData,
             message: 'Authorization succeeded.',
+
         })
 
     } catch (error) {
-        res.json({ message: 'Authorization failed.' })
+        console.log(error);
     }
 
 }
@@ -103,6 +96,7 @@ const login = async (req, res) => {
 // Me
 const getMe = async (req, res) => {
     try {
+        console.log(req);
         const user = await User.findById(req.userId)
 
         if (!user) {
@@ -125,6 +119,7 @@ const getMe = async (req, res) => {
             userData,
             token,
         })
+
     } catch (error) {
         res.json({ message: 'No access.' })
     }
