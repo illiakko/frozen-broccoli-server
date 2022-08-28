@@ -96,7 +96,6 @@ const login = async (req, res) => {
 // Me
 const getMe = async (req, res) => {
     try {
-        console.log(req);
         const user = await User.findById(req.userId)
 
         if (!user) {
