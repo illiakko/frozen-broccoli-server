@@ -3,21 +3,21 @@
 const getWallHeat = async (req, res) => {
 
     try {
-        const cpCon = req.body.construction.heatTransfer
-        const cpIns = req.body.insulation.heatTransfer
-        const conThick = req.body.constructionThickness
-        const insThick = req.body.insulationThickness
-        const outT = req.body.outerTemperature
-        const solarT = req.body.solarTemperature
-        const windInSpeed = req.body.windSpeed
-        const windOutSpeed = req.body.windOutSpeed
-        const customCon = req.body.customConstruction
-        const customIns = req.body.customInsulation
-        const isCustomCon = req.body.isCustomConstruction
-        const isCustomIns = req.body.isCustomInsulation
-        const wHeight = req.body.wHeight
-        const wLength = req.body.wLength
-        const roomT = req.body.roomTemperature
+        const cpCon = req.body.wallParams.wall.construction.heatTransfer
+        const cpIns = req.body.wallParams.wall.insulation.heatTransfer
+        const conThick = req.body.wallParams.wall.constructionThickness
+        const insThick = req.body.wallParams.wall.insulationThickness
+        const outT = req.body.wallParams.wall.outerTemperature
+        const solarT = req.body.wallParams.wall.solarTemperature
+        const windInSpeed = req.body.wallParams.windInSpeed
+        const windOutSpeed = req.body.wallParams.wall.windSpeed
+        const customCon = req.body.wallParams.wall.customConstruction
+        const customIns = req.body.wallParams.wall.customInsulation
+        const isCustomCon = req.body.wallParams.wall.isCustomConstruction
+        const isCustomIns = req.body.wallParams.wall.isCustomInsulation
+        const wHeight = req.body.wallParams.wHeight
+        const wLength = req.body.wallParams.wLength
+        const roomT = req.body.wallParams.roomTemperature
 
         // console.log(cpCon, cpIns, conThick, insThick, outT, solarT, windInSpeed, windOutSpeed, customCon, customIns, isCustomCon, isCustomIns, wHeight, wLength, roomT);
 
@@ -47,7 +47,7 @@ const getWallHeat = async (req, res) => {
         const deltaT = solarT + outT - roomT
         const Q1 = K * F * deltaT;
 
-        return res.status(200).send({ heatWall: Math.round(Q1 * 10) / 10 })
+        return res.status(200).send({ heatWall: Math.round(Q1 * 100) / 100 })
     } catch (error) {
         console.log(error);
     }

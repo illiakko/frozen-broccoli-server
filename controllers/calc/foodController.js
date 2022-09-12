@@ -104,7 +104,7 @@ const getQ2 = async (req, res) => {
                 let { raspirationHeat, freezPoint, cpAboveFreez, cpBelowFreez, latentHeat } = result
 
                 if (roomTemperature > freezPoint) {
-                    const Q2 = (perDayMass * cpAboveFreez * (inletProdTemperature - roomTemperature)) / (3600 * coolingTime)
+                    const Q2 = ((perDayMass * 1000) * cpAboveFreez * (inletProdTemperature - roomTemperature)) / (3600 * coolingTime)
 
                     const linearInterpolation = (roomTemperature, raspirationHeat) => {
                         x = parseFloat(roomTemperature)
@@ -120,22 +120,22 @@ const getQ2 = async (req, res) => {
                     const qBreathNewFood = linearInterpolation(inletProdTemperature, raspirationHeat)
                     const qBeathAllFood = linearInterpolation(roomTemperature, raspirationHeat)
 
-                    const breathNewFood = qBreathNewFood / 1000 * (perDayMass / 1000)
-                    const breathAllFood = qBeathAllFood / 1000 * (totalMass / 1000)
+                    const breathNewFood = qBreathNewFood / 1000 * (perDayMass)
+                    const breathAllFood = qBeathAllFood / 1000 * (totalMass)
 
                     return res.status(200).json({
                         Q2: Math.round(Q2 * 10) / 10,
-                        breathNewFood: Math.round(breathNewFood * 10) / 10,
-                        breathAllFood: Math.round(breathAllFood * 10) / 10,
+                        breathNewFood: Math.round(breathNewFood * 100) / 100,
+                        breathAllFood: Math.round(breathAllFood * 100) / 100,
 
                     })
                 } else {
                     const Q2freez =
-                        ((perDayMass * cpAboveFreez * (inletProdTemperature - freezPoint) / 3600)
-                            + (perDayMass * latentHeat / 3600)
-                            + (perDayMass * cpBelowFreez * (inletProdTemperature - roomTemperature) / 3600)) / coolingTime
+                        (((perDayMass * 1000) * cpAboveFreez * (inletProdTemperature - freezPoint) / 3600)
+                            + ((perDayMass * 1000) * latentHeat / 3600)
+                            + ((perDayMass * 1000) * cpBelowFreez * (inletProdTemperature - roomTemperature) / 3600)) / coolingTime
                     return res.status(200).json({
-                        Q2: Math.round(Q2freez * 10) / 10,
+                        Q2: Math.round(Q2freez * 100) / 100,
                         breathNewFood: 0,
                         breathAllFood: 0,
                     })
