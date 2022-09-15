@@ -70,15 +70,13 @@ const getDoorsHeat = async (req, res) => {
         const Dt = dorsOpenHours / 24
 
         let E = 0
-        switch (dorsProtection) {
-            case 'noProtection':
-                E = 0;
-            case 'stripCurtain':
-                E = 0.2;
-            case 'airCurtain':
-                E = 0.7;
-            default:
-                E = 0;
+        if (dorsProtection === 'noProtection') {
+            E = 0;
+        } else if (dorsProtection === 'stripCurtain') {
+            E = 0.2;
+
+        } else if (dorsProtection === 'airCurtain') {
+            E = 0.7;
         }
 
         let Df = 1.1
