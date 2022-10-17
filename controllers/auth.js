@@ -88,7 +88,7 @@ const login = async (req, res) => {
         })
 
     } catch (error) {
-        console.log(error);
+        return res.status(400).send({ message: 'Something went wrong :(' })
     }
 
 }

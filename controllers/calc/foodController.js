@@ -97,11 +97,15 @@ const getQ2 = async (req, res) => {
             inletProdTemperature,
             currentFoodItem,
             roomTemperature,
-            coolingTime
+            coolingTime,
+            packaging
         } = req.body
+
         await Food.findOne({ foodItem: currentFoodItem })
             .then((result) => {
                 let { raspirationHeat, freezPoint, cpAboveFreez, cpBelowFreez, latentHeat } = result
+
+                const Q2packaging = (perDayMass * 1000 * packaging.weight * packaging.specificHeat * (inletProdTemperature - roomTemperature)) / (3600 * coolingTime)
 
                 if (roomTemperature > freezPoint) {
                     const Q2 = ((perDayMass * 1000) * cpAboveFreez * (inletProdTemperature - roomTemperature)) / (3600 * coolingTime)
@@ -127,6 +131,7 @@ const getQ2 = async (req, res) => {
                         Q2: Math.round(Q2 * 10) / 10,
                         breathNewFood: Math.round(breathNewFood * 100) / 100,
                         breathAllFood: Math.round(breathAllFood * 100) / 100,
+                        Q2packaging: Math.round(Q2packaging * 100) / 100,
 
                     })
                 } else {
@@ -138,6 +143,7 @@ const getQ2 = async (req, res) => {
                         Q2: Math.round(Q2freez * 100) / 100,
                         breathNewFood: 0,
                         breathAllFood: 0,
+                        Q2packaging: Math.round(Q2packaging * 100) / 100,
                     })
                 }
             })
