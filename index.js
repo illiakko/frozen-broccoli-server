@@ -11,7 +11,12 @@ connectDB()
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-app.use(cors());
+const corsOptions = {
+    origin: process.env.CORS_ORIGIN,
+    optionsSuccessStatus: 200
+}
+
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use('/static', express.static(__dirname + '/public'));
 
