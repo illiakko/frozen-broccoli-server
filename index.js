@@ -23,3 +23,6 @@ app.use('/api/auth', authRoute);
 app.use('/api/calc', calcRoute);
 
 app.listen(PORT, () => console.log(`Server up on port ${PORT}`));
+
+// Export the Express API
+module.exports = app;
