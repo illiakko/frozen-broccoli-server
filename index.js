@@ -31,11 +31,7 @@ app.use(function (req, res, next) {
     next();
 });
 
-app.use(
-    cors({
-        origin: "*",
-    })
-);
+app.use(cors());
 app.use(express.json());
 app.use('/static', express.static(__dirname + '/public'));
 
