@@ -14,7 +14,7 @@ const PORT = process.env.PORT || 5000;
 
 
 app.use(cors(cors({
-    origin: 'https://frozen-broccoli-client.vercel.app/'
+    origin: 'https://frozen-broccoli-client.vercel.app'
 })));
 app.use(express.json());
 app.use('/static', express.static(__dirname + '/public'));
